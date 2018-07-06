@@ -92,6 +92,6 @@ sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1, validation_data=(x_test, y_test))
-score = model.evaluate(X_test, Y_test, show_accuracy=True, verbose=0)
+score = model.evaluate(x_test, y_test, verbose=1)
 print('Test score:', score[0])
 print('Test accuracy:', score[1])
