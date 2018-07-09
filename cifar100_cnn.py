@@ -18,9 +18,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 batch_size = 128
 nb_classes = 100
 nb_epoch = 12
-data_augmentation = True
-save_dir = os.path.join(os.getcwd(), 'saved_models')
-model_name = 'keras_cifar10_trained_model.h5'
 
 
 def load_batch(fpath, label_key='labels'):
@@ -67,23 +64,30 @@ else:
     input_shape = (img_rows, img_cols, img_channels)
 
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding='same', input_shape=input_shape))
+model.add(Conv2D(128, (3, 3), padding='same', input_shape=input_shape))
+model.add(Activation('elu'))
+model.add(Conv2D(128, (3, 3)))
+model.add(Activation('elu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.1))
+
+model.add(Conv2D(256, (3, 3), padding='same'))
 model.add(Activation('relu'))
-model.add(Conv2D(32, (3, 3)))
+model.add(Conv2D(256, (3, 3)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(64, (3, 3), padding='same'))
-model.add(Activation('relu'))
-model.add(Conv2D(64, (3, 3)))
-model.add(Activation('relu'))
+model.add(Conv2D(512, (3, 3), padding='same'))
+model.add(Activation('elu'))
+model.add(Conv2D(512, (3, 3)))
+model.add(Activation('elu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(Dropout(0.5))
 
 model.add(Flatten())
-model.add(Dense(512))
-model.add(Activation('relu'))
+model.add(Dense(1024))
+model.add(Activation('elu'))
 model.add(Dropout(0.5))
 model.add(Dense(nb_classes))
 model.add(Activation('softmax'))
@@ -95,3 +99,4 @@ model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1, v
 score = model.evaluate(x_test, y_test, verbose=1)
 print('Test score:', score[0])
 print('Test accuracy:', score[1])
+model.save(os.path.join(os.getcwd(), 'keras_cifar100_trained_model.h5'))
