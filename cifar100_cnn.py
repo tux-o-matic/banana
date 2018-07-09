@@ -17,7 +17,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 batch_size = 128
 nb_classes = 100
-nb_epoch = 12
+nb_epoch = 20
 
 
 def load_batch(fpath, label_key='labels'):
@@ -92,7 +92,9 @@ model.add(Dropout(0.5))
 model.add(Dense(nb_classes))
 model.add(Activation('softmax'))
 
-sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+lrate = 0.01
+decay_rate = lrate/nb_epoch
+sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1, validation_data=(x_test, y_test))
