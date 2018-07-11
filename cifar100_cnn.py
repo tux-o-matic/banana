@@ -17,7 +17,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 batch_size = 128
 nb_classes = 100
-nb_epoch = 20
+nb_epoch = 24
 
 
 def load_batch(fpath, label_key='labels'):
@@ -48,6 +48,12 @@ x_test, y_test = load_batch(fpath, label_key=label_mode + '_labels')
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
+
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
+
+x_train /= 255.
+x_test /= 255.
 
 y_train = keras.utils.to_categorical(y_train, nb_classes)
 y_test = keras.utils.to_categorical(y_test, nb_classes)
