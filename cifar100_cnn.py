@@ -17,7 +17,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 batch_size = 128
 nb_classes = 100
-nb_epoch = 24
+nb_epoch = 100
 
 
 def load_batch(fpath, label_key='labels'):
@@ -105,6 +105,5 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 
 model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1, validation_data=(x_test, y_test))
 score = model.evaluate(x_test, y_test, verbose=1)
-print('Test score:', score[0])
-print('Test accuracy:', score[1])
+print('\nTest result: %.3f loss: %.3f' % (scores[1]*100,scores[0])
 model.save(os.path.join(os.getcwd(), 'keras_cifar100_trained_model.h5'))
