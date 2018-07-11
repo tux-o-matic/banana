@@ -13,7 +13,6 @@ from keras.preprocessing.image import ImageDataGenerator
 import os
 import sys
 
-
 # Avoid warnings about CPU features
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -24,18 +23,14 @@ nb_epoch = 100
 
 def load_batch(fpath, label_key='labels'):
     with open(fpath, 'rb') as f:
-        if sys.version_info < (3,):
-            d = pickle.load(f)
-        else:
-            d = pickle.load(f, encoding='bytes')
-            # decode utf8
-            d_decoded = {}
-            for k, v in d.items():
-                d_decoded[k.decode('utf8')] = v
-            d = d_decoded
+        d = pickle.load(f, encoding='bytes')
+        # decode utf8
+        d_decoded = {}
+        for k, v in d.items():
+          d_decoded[k.decode('utf8')] = v
+        d = d_decoded           
     data = d['data']
     labels = d[label_key]
-
     data = data.reshape(data.shape[0], 3, 32, 32)
     return data, labels
 
