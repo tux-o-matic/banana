@@ -4,6 +4,7 @@ import keras
 import _pickle as pickle
 from keras import backend as K
 from keras import optimizers
+from keras import regularizers
 from keras.layers.convolutional import MaxPooling2D
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, BatchNormalization, Flatten
@@ -73,29 +74,30 @@ else:
 generator = ImageDataGenerator(rotation_range=90, width_shift_range=0.1,
                                height_shift_range=0.1, horizontal_flip=True)
 generator.fit(x_train, seed=0)    
-    
+
+weight_decay = 1e-4
     
 model = Sequential()
-model.add(Conv2D(128, (3, 3), padding='same', input_shape=input_shape))
+model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=input_shape))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(Conv2D(128, (3, 3)))
+model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
 model.add(Activation('elu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.1))
 
-model.add(Conv2D(256, (3, 3), padding='same'))
+model.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
 model.add(Activation('relu'))
 model.add(BatchNormalization())
-model.add(Conv2D(256, (3, 3)))
+model.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(512, (3, 3), padding='same'))
+model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(Conv2D(512, (3, 3)))
+model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
 model.add(Activation('elu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
