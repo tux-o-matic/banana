@@ -78,32 +78,34 @@ generator.fit(x_train, seed=0)
 weight_decay = 1e-4
     
 model = Sequential()
-model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=input_shape))
+model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=input_shape))
+model.add(Activation('elu'))
+model.add(BatchNormalization())
+model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Activation('elu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.2))
+
+model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Activation('relu'))
+model.add(BatchNormalization())
+model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.3))
+
+model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
 model.add(Activation('elu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.1))
-
-model.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
-model.add(Activation('relu'))
-model.add(BatchNormalization())
-model.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-
-model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
-model.add(Activation('elu'))
-model.add(BatchNormalization())
-model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
-model.add(Activation('elu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
+model.add(Dropout(0.4))
 
 model.add(Flatten())
 model.add(Dense(nb_classes, activation='softmax'))
+
+model.summary()
 
 lrate = 0.01
 decay_rate = lrate/nb_epoch
