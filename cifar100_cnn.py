@@ -5,6 +5,7 @@ import _pickle as pickle
 from keras import backend as K
 from keras import optimizers
 from keras import regularizers
+from keras.callbacks import LearningRateScheduler
 from keras.layers.convolutional import MaxPooling2D
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, BatchNormalization, Flatten
