@@ -59,10 +59,6 @@ x_test /= 255.
 y_train = keras.utils.to_categorical(y_train, nb_classes)
 y_test = keras.utils.to_categorical(y_test, nb_classes)
 
-generator = ImageDataGenerator(rotation_range=90, width_shift_range=0.1,
-                               height_shift_range=0.1, horizontal_flip=True)
-generator.fit(x_train, seed=0)
-
 _, img_channels, img_rows, img_cols = x_train.shape
 
 if K.image_data_format() == 'channels_first':
@@ -74,6 +70,11 @@ else:
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, img_channels)
     input_shape = (img_rows, img_cols, img_channels)
 
+generator = ImageDataGenerator(rotation_range=90, width_shift_range=0.1,
+                               height_shift_range=0.1, horizontal_flip=True)
+generator.fit(x_train, seed=0)    
+    
+    
 model = Sequential()
 model.add(Conv2D(128, (3, 3), padding='same', input_shape=input_shape))
 model.add(Activation('elu'))
