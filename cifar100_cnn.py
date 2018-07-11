@@ -35,6 +35,15 @@ def load_batch(fpath, label_key='labels'):
     return data, labels
 
 
+def lr_schedule(epoch):
+    lrate = 0.001
+    if epoch > 75:
+        lrate = 0.0005
+    elif epoch > 100:
+        lrate = 0.0003        
+    return lrate
+
+
 label_mode = 'fine'
 dirname = 'cifar-100-python'
 fpath = os.path.join(os.getcwd(), dirname, 'train')
@@ -107,7 +116,8 @@ decay_rate = lrate/nb_epoch
 sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1, validation_data=(x_test, y_test))
+model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1,
+          validation_data=(x_test, y_test), callbacks=[LearningRateScheduler(lr_schedule)])
 score = model.evaluate(x_test, y_test, verbose=1)
 print('\nTest result: %.3f loss: %.3f' % (score[1]*100,score[0]))
 model.save(os.path.join(os.getcwd(), 'keras_cifar100_trained_model.h5'))
