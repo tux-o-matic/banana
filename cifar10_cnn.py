@@ -46,7 +46,7 @@ def lr_schedule(epoch):
 
 
 label_mode = 'fine'
-dirname = 'cifar-10-python'
+dirname = 'cifar-10-batches-py'
 fpath = os.path.join(os.getcwd(), dirname, 'train')
 x_train, y_train = load_batch(fpath, label_key=label_mode + '_labels')
 fpath = os.path.join(os.getcwd(), dirname, 'test')
