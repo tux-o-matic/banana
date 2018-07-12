@@ -78,7 +78,7 @@ lrate = 0.001
 decay_rate = lrate/nb_epoch
 sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 
-lr_reducer = ReduceLROnPlateau(monitor='val_acc', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5)
+lr_reducer = ReduceLROnPlateau(monitor='val_acc', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5, verbose=1)
 early_stopping_callback = EarlyStopping(monitor='val_acc', patience=10)
 model_checkpoint= ModelCheckpoint(saved_model, monitor="val_acc", save_best_only=True, verbose=1)
 
