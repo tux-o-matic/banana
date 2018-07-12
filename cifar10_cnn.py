@@ -22,20 +22,6 @@ nb_classes = 10
 nb_epoch = 100
 
 
-def load_batch(fpath):
-    with open(fpath, 'rb') as f:
-        d = pickle.load(f, encoding='bytes')
-        # decode utf8
-        d_decoded = {}
-        for k, v in d.items():
-          d_decoded[k.decode('utf8')] = v
-        d = d_decoded           
-    data = d['data']
-    cls = np.array(data[b'labels'])
-    data = data.reshape(data.shape[0], 3, 32, 32)
-    return data, cls
-
-
 def lr_schedule(epoch):
     lrate = 0.001
     if epoch > 75:
@@ -45,12 +31,7 @@ def lr_schedule(epoch):
     return lrate
 
 
-label_mode = 'fine'
-dirname = 'cifar-10-batches-py'
-fpath = os.path.join(os.getcwd(), dirname, 'train')
-x_train, y_train = load_batch(fpath, label_key=label_mode + '_labels')
-fpath = os.path.join(os.getcwd(), dirname, 'test')
-x_test, y_test = load_batch(fpath, label_key=label_mode + '_labels')
+(x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
 x_train = x_train.astype('float32') / 255.0 - 0.5
 x_test = x_test.astype('float32') / 255.0 - 0.5
@@ -60,15 +41,6 @@ y_test = keras.utils.to_categorical(y_test, nb_classes)
 
 _, img_channels, img_rows, img_cols = x_train.shape
 
-if K.image_data_format() == 'channels_first':
-    x_train = x_train.reshape(x_train.shape[0], img_channels, img_rows, img_cols)
-    x_test = x_test.reshape(x_test.shape[0], img_channels, img_rows, img_cols)
-    input_shape = (img_channels, img_rows, img_cols)
-else:
-    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, img_channels)
-    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, img_channels)
-    input_shape = (img_rows, img_cols, img_channels)
-
 generator = ImageDataGenerator(rotation_range=90, width_shift_range=0.1,
                                height_shift_range=0.1, horizontal_flip=True)
 generator.fit(x_train, seed=0)    
@@ -76,7 +48,7 @@ generator.fit(x_train, seed=0)
 weight_decay = 1e-4
     
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=input_shape))
+model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=x_train.shape[1:]))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
@@ -108,13 +80,13 @@ model.add(Dense(nb_classes, activation='softmax'))
 
 model.summary()
 
-lrate = 0.01
+lrate = 0.001
 decay_rate = lrate/nb_epoch
 sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1,
-          validation_data=(x_test, y_test), callbacks=[LearningRateScheduler(lr_schedule)])
+model.fit_generator(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1,
+validation_data=(x_test, y_test), callbacks=[LearningRateScheduler(lr_schedule)])
 score = model.evaluate(x_test, y_test, verbose=1)
 print('\nTest result: %.3f loss: %.3f' % (score[1]*100,score[0]))
 model.save(os.path.join(os.getcwd(), 'keras_cifar10_trained_model.h5'))
