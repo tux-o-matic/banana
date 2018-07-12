@@ -106,13 +106,12 @@ model.add(Dense(nb_classes, activation='softmax'))
 
 model.summary()
 
-lrate = 0.01
+lrate = 0.001
 decay_rate = lrate/nb_epoch
 sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-
-model.fit(x_train, y_train, batch_size=batch_size, epochs=nb_epoch, verbose=1,
-          validation_data=(x_test, y_test), callbacks=[LearningRateScheduler(lr_schedule)])
+model.fit_generator(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1,
+                    validation_data=(x_test, y_test), callbacks=[LearningRateScheduler(lr_schedule)])
 score = model.evaluate(x_test, y_test, verbose=1)
 print('\nTest result: %.3f loss: %.3f' % (score[1]*100,score[0]))
 model.save(os.path.join(os.getcwd(), 'keras_cifar100_trained_model.h5'))
