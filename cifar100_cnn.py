@@ -52,10 +52,6 @@ x_train, y_train = load_batch(fpath, label_key=label_mode + '_labels')
 fpath = os.path.join(os.getcwd(), dirname, 'test')
 x_test, y_test = load_batch(fpath, label_key=label_mode + '_labels')
 
-print('x_train shape:', x_train.shape)
-print(x_train.shape[0], 'train samples')
-print(x_test.shape[0], 'test samples')
-
 x_train = x_train.astype('float32') / 255.0 - 0.5
 x_test = x_test.astype('float32') / 255.0 - 0.5
 
@@ -67,11 +63,9 @@ _, img_channels, img_rows, img_cols = x_train.shape
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], img_channels, img_rows, img_cols)
     x_test = x_test.reshape(x_test.shape[0], img_channels, img_rows, img_cols)
-    input_shape = (img_channels, img_rows, img_cols)
 else:
     x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, img_channels)
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, img_channels)
-    input_shape = (img_rows, img_cols, img_channels)
 
 generator = ImageDataGenerator(rotation_range=90, width_shift_range=0.1,
                                height_shift_range=0.1, horizontal_flip=True)
@@ -80,7 +74,7 @@ generator.fit(x_train, seed=0)
 weight_decay = 1e-4
     
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=input_shape))
+model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=x_train.shape[1:]))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
