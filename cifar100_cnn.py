@@ -20,6 +20,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 batch_size = 128
 nb_classes = 100
 nb_epoch = 100
+saved_model = os.path.join(os.getcwd(), 'keras_cifar100_trained_model.h5')
 
 
 def load_batch(fpath, label_key='labels'):
@@ -34,15 +35,6 @@ def load_batch(fpath, label_key='labels'):
     labels = d[label_key]
     data = data.reshape(data.shape[0], 3, 32, 32)
     return data, labels
-
-
-def lr_schedule(epoch):
-    lrate = 0.001
-    if epoch > 75:
-        lrate = 0.0005
-    elif epoch > 100:
-        lrate = 0.0003        
-    return lrate
 
 
 label_mode = 'fine'
@@ -109,9 +101,14 @@ model.summary()
 lrate = 0.001
 decay_rate = lrate/nb_epoch
 sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
+
+lr_reducer = ReduceLROnPlateau(monitor='val_acc', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5)
+early_stopping_callback = EarlyStopping(monitor='val_acc', patience=10)
+model_checkpoint= ModelCheckpoint(saved_model, monitor="val_acc", save_best_only=True, verbose=1)
+
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 model.fit_generator(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1,
-                    validation_data=(x_test, y_test), callbacks=[LearningRateScheduler(lr_schedule)])
+                    validation_data=(x_test, y_test), callbacks=[lr_reducer, early_stopping_callback, model_checkpoint])
 score = model.evaluate(x_test, y_test, verbose=1)
 print('\nTest result: %.3f loss: %.3f' % (score[1]*100,score[0]))
-model.save(os.path.join(os.getcwd(), 'keras_cifar100_trained_model.h5'))
+model.save(saved_model)
