@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import keras
-import _pickle as pickle
 import numpy as np
 from keras import backend as K
 from keras import optimizers
