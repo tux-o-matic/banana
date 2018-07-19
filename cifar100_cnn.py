@@ -60,8 +60,7 @@ else:
     x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, img_channels)
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, img_channels)
 
-generator = ImageDataGenerator(rotation_range=15, width_shift_range=0.1,
-                               height_shift_range=0.1, horizontal_flip=True)
+generator = ImageDataGenerator(rotation_range=15, width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
 generator.fit(x_train, seed=0)    
 
 wdecay = 1e-4

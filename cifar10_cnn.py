@@ -34,8 +34,7 @@ y_test = keras.utils.to_categorical(y_test, nb_classes)
 
 _, img_channels, img_rows, img_cols = x_train.shape
 
-generator = ImageDataGenerator(rotation_range=90, width_shift_range=0.1,
-                               height_shift_range=0.1, horizontal_flip=True)
+generator = ImageDataGenerator(rotation_range=90, width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
 generator.fit(x_train, seed=0)    
 
 wdecay = 1e-4
