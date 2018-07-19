@@ -30,7 +30,7 @@ def load_batch(fpath, label_key='labels'):
         # decode utf8
         d_decoded = {}
         for k, v in d.items():
-          d_decoded[k.decode('utf8')] = v
+            d_decoded[k.decode('utf8')] = v
         d = d_decoded           
     data = d['data']
     labels = d[label_key]
@@ -64,31 +64,31 @@ generator = ImageDataGenerator(rotation_range=15, width_shift_range=0.1,
                                height_shift_range=0.1, horizontal_flip=True)
 generator.fit(x_train, seed=0)    
 
-weight_decay = 1e-4
+wdecay = 1e-4
     
 model = Sequential()
-model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay), input_shape=x_train.shape[1:]))
+model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay), input_shape=x_train.shape[1:]))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.2))
 
-model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.3))
 
-model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -105,11 +105,12 @@ sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 
 lr_reducer = ReduceLROnPlateau(monitor='val_acc', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5, verbose=1)
 early_stopping_callback = EarlyStopping(monitor='val_acc', patience=10)
-model_checkpoint= ModelCheckpoint(saved_model, monitor="val_acc", save_best_only=True, verbose=1)
+model_checkpoint = ModelCheckpoint(saved_model, monitor="val_acc", save_best_only=True, verbose=1)
 
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.fit_generator(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1, workers=3, use_multiprocessing=True,
-                    validation_data=(x_test, y_test), callbacks=[lr_reducer, early_stopping_callback, model_checkpoint])
+model.fit_generator(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1, workers=3,
+                    use_multiprocessing=True, validation_data=(x_test, y_test),
+                    callbacks=[lr_reducer, early_stopping_callback, model_checkpoint])
 score = model.evaluate(x_test, y_test, verbose=1)
-print('\nTest result: %.3f loss: %.3f' % (score[1]*100,score[0]))
+print('\nTest result: %.3f loss: %.3f' % (score[1]*100, score[0]))
 model.save(saved_model)
