@@ -24,4 +24,4 @@ to
 ```ini
 tensorflow-gpu==1.8.0
 ```
-If your CPU doesn't support AVX2 (Intel chip shipped before 2012), you'll need to use an older version of TensorFlow such as 1.5.0.
+If your CPU doesn't support the AVX1 instruction set (Intel chip shipped before 2012), you'll need to use an older version of TensorFlow such as 1.5.0.
