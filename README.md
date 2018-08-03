@@ -1,11 +1,12 @@
 ## Setup
+For training this CNN with over 200 steps and more than 10 epochs, a GPU with CUDA support is a must. CPU only won't be enough.
 
 At this time, all tests were done with CUDA 9.0.
 ### Nvidia drivers
 You'll need the closed source Nvidia drivers, one supporting the correct CUDA version.
 Blacklist the Nouveau open source driver it's loaded at boot.
 ### CUDA
-Some environmens, such as Python 3 from SCL require to export the CUDA path:
+Some environments, such as Python 3 from SCL require to export the CUDA path:
 ```shell
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64/
 ```
