@@ -1,6 +1,6 @@
 __license__ = 'GPL-3.0'
 
-
+import json
 import keras
 import os
 from keras import optimizers
@@ -77,7 +77,8 @@ class Banana:
 
     @staticmethod
     def train(dataset_test_dir, dataset_train_dir, nb_classes, steps_per_epoch, target_size, validation_steps,
-              batch_size=32, learning_rate=0.01, log_dir=None, nb_epoch=100, trained_model='banana.h5', verbose=1):
+              batch_size=32, class_indices='class_indices.json', learning_rate=0.01, log_dir=None, nb_epoch=100,
+              trained_model='banana.h5', verbose=1):
         """
         Train Keras model with TensorFlow backend for image recognition.
 
@@ -88,6 +89,7 @@ class Banana:
         :param tuple target_size: A tuple with the width and height of the pictures
         :param int validation_steps: The number of steps to run the validation, should match the number of test images
         :param int batch_size: The batch size (default: 32)
+        :param str class_indices: The full path to the JSON file where the class indices dictionary should be saved
         :param float learning_rate: The starting learning rate, will vary as training progresses
         :param str log_dir: The directory to use for TensorBoard logging. If not specified, logging will be deactivate
         :param int nb_epoch: The number of epoch for the model training. Training will stop early if accuracy stagnates
@@ -101,6 +103,9 @@ class Banana:
 
         train_generator = train_datagen.flow_from_directory(dataset_train_dir, target_size=target_size,
                                                             batch_size=batch_size, class_mode='binary')
+        if class_indices:
+            with open(class_indices, 'w') as f:
+                json.dump(train_generator.class_indices, f, ensure_ascii=False)
 
         validation_generator = test_datagen.flow_from_directory(dataset_test_dir, target_size=target_size,
                                                                 batch_size=batch_size, class_mode='binary')
