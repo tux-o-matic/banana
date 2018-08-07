@@ -2,13 +2,11 @@ __license__ = 'GPL-3.0'
 
 
 import keras
-import numpy as np
 import os
-import sys
 from keras import optimizers
 from keras import regularizers
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers import Activation, BatchNormalization, Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -122,3 +120,17 @@ class Banana:
                             validation_steps=validation_steps)
 
         model.save(trained_model)
+
+    @staticmethod
+    def predict(img, trained_model='banana.h5'):
+        """
+        Returns the class prediction for the input image.
+
+        :param img: The image as a NumPy array
+        :type nparray:
+        :param str trained_model: Full path to trained model to compare the image against
+        :return: An array with class match
+        :rtype: array
+        """
+        model = load_model(trained_model)
+        return model.predict(img)
