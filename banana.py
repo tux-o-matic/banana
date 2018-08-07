@@ -127,15 +127,24 @@ class Banana:
         model.save(trained_model)
 
     @staticmethod
-    def predict(img, trained_model='banana.h5'):
+    def predict(img, class_indices='class_indices.json', trained_model='banana.h5'):
         """
         Returns the class prediction for the input image.
 
         :param img: The image as a NumPy array
         :type nparray:
         :param str trained_model: Full path to trained model to compare the image against
-        :return: An array with class match
-        :rtype: array
+        :return: An array or Dict with class match
+        :rtype: object
         """
         model = load_model(trained_model)
-        return model.predict(img)
+        prediction = model.predict(img)
+        if class_indices:
+            match = {}
+            with open(class_indices, 'r') as f:
+                classes = json.load(f)
+            for class in classes:
+                match[class] = prediction[0][classes[class]]
+            return match
+        else:
+            return prediction
