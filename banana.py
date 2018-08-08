@@ -143,8 +143,8 @@ class Banana:
             match = {}
             with open(class_indices, 'r') as f:
                 classes = json.load(f)
-            for class in classes:
-                match[class] = prediction[0][classes[class]]
+            for cls in classes:
+                match[cls] = prediction[0][classes[cls]]
             return match
         else:
             return prediction
