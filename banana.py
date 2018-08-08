@@ -133,6 +133,7 @@ class Banana:
 
         :param img: The image as a NumPy array
         :type nparray:
+        :param str class_indices: Full path to the JSON file listing the classes from the trained model
         :param str trained_model: Full path to trained model to compare the image against
         :return: An array or Dict with class match
         :rtype: object
