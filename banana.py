@@ -96,7 +96,7 @@ class Banana:
         :param str trained_model: The full path of the trained Keras model to save
         :param bool verbose: If training progress should be printed to stdout
         """
-        train_datagen = ImageDataGenerator(rescale=1./255, rotation_range=90, width_shift_range=0.1,
+        train_datagen = ImageDataGenerator(rescale=1./255, rotation_range=90, width_shift_range=0.1, zoom_range=0.1,
                                            height_shift_range=0.1, horizontal_flip=True)
 
         test_datagen = ImageDataGenerator(rescale=1. / 255)
