@@ -8,8 +8,8 @@ from keras import regularizers
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from keras.models import Sequential, load_model
 from keras.layers import Activation, BatchNormalization, Conv2D, Dense, Dropout, Flatten, MaxPooling2D
-from keras.preprocessing.image import ImageDataGenerator
-
+from keras.preprocessing.image import ImageDataGenerator, img_to_array, load_img
+import numpy as np
 
 class Banana:
 
@@ -36,7 +36,7 @@ class Banana:
         """
         model = Sequential()
         model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay),
-                         input_shape=(img_channels, img_rows, img_cols)))
+                         input_shape=(img_rows, img_cols, img_channels)))
         model.add(Activation('elu'))
         model.add(BatchNormalization())
         model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
@@ -102,13 +102,15 @@ class Banana:
         test_datagen = ImageDataGenerator(rescale=1. / 255)
 
         train_generator = train_datagen.flow_from_directory(dataset_train_dir, target_size=target_size,
-                                                            batch_size=batch_size, class_mode='binary')
+                                                            batch_size=batch_size, class_mode='categorical')
         if class_indices:
+            class_dict = train_generator.class_indices
+            class_dict['target_size'] = target_size
             with open(class_indices, 'w') as f:
-                json.dump(train_generator.class_indices, f, ensure_ascii=False)
+                json.dump(class_dict, f, ensure_ascii=False)
 
         validation_generator = test_datagen.flow_from_directory(dataset_test_dir, target_size=target_size,
-                                                                batch_size=batch_size, class_mode='binary')
+                                                                batch_size=batch_size, class_mode='categorical')
 
         callbacks = [ReduceLROnPlateau(monitor='val_acc', factor=0.1, cooldown=0, patience=3, min_lr=1e-5,
                                        verbose=1),
@@ -131,7 +133,7 @@ class Banana:
         """
         Returns the class prediction for the input image.
 
-        :param img: The image as a NumPy array
+        :param img: The image as a NumPy array or the path to the image
         :type nparray:
         :param str class_indices: Full path to the JSON file listing the classes from the trained model
         :param str trained_model: Full path to trained model to compare the image against
@@ -139,11 +141,20 @@ class Banana:
         :rtype: object
         """
         model = load_model(trained_model)
+
+        if class_indices:
+            with open(class_indices, 'r') as f:
+                classes = json.load(f)
+                target_size = classes['target_size']
+                del classes['target_size']
+
+            if isinstance(img, np.ndarray) is False:
+                img = img_to_array(load_img(img, target_size=tuple(target_size)))
+                img = np.expand_dims(img, axis=0)
+
         prediction = model.predict(img)
         if class_indices:
             match = {}
-            with open(class_indices, 'r') as f:
-                classes = json.load(f)
             for cls in classes:
                 match[cls] = prediction[0][classes[cls]]
             return match
