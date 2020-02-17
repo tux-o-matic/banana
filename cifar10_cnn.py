@@ -26,8 +26,8 @@ saved_model = os.path.join(os.getcwd(), 'keras_cifar10_trained_model.h5')
 x_train = x_train.astype('float32') / 255.0 - 0.5
 x_test = x_test.astype('float32') / 255.0 - 0.5
 
-y_train = keras.utils.to_categorical(y_train, nb_classes)
-y_test = keras.utils.to_categorical(y_test, nb_classes)
+y_train = tensorflow.keras.utils.to_categorical(y_train, nb_classes)
+y_test = tensorflow.keras.utils.to_categorical(y_test, nb_classes)
 
 _, img_channels, img_rows, img_cols = x_train.shape
 
