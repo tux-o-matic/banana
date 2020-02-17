@@ -1,17 +1,15 @@
 #!/usr/bin/python3
 
-import keras
 import numpy as np
-from keras import backend as K
-from keras import optimizers
-from keras import regularizers
-from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
-from keras.datasets import cifar10
-from keras.layers.convolutional import MaxPooling2D
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, BatchNormalization, Flatten
-from keras.layers import Conv2D, MaxPooling2D
-from keras.preprocessing.image import ImageDataGenerator
+import tensorflow
+from tensorflow.keras import regularizers
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.layers.convolutional import MaxPooling2D
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Activation, BatchNormalization, Flatten
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 import sys
 
@@ -74,7 +72,7 @@ model.summary()
 
 lrate = 0.001
 decay_rate = lrate/nb_epoch
-sgd = optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
+sgd = tensorflow.keras.optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 
 lr_reducer = ReduceLROnPlateau(monitor='val_acc', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5, verbose=1)
 early_stopping_callback = EarlyStopping(monitor='val_acc', patience=10)
