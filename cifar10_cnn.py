@@ -5,10 +5,9 @@ import tensorflow
 from tensorflow.keras import regularizers
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.layers.convolutional import MaxPooling2D
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, BatchNormalization, Flatten
-from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras.layers import Conv2D, MaxPool2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 import sys
@@ -44,7 +43,7 @@ model.add(BatchNormalization())
 model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPool2D(pool_size=(2, 2)))
 model.add(Dropout(0.2))
 
 model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
@@ -53,7 +52,7 @@ model.add(BatchNormalization())
 model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPool2D(pool_size=(2, 2)))
 model.add(Dropout(0.3))
 
 model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
@@ -62,7 +61,7 @@ model.add(BatchNormalization())
 model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(wdecay)))
 model.add(Activation('elu'))
 model.add(BatchNormalization())
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(MaxPool2D(pool_size=(2, 2)))
 model.add(Dropout(0.4))
 
 model.add(Flatten())
