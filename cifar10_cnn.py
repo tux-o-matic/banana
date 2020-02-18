@@ -80,7 +80,7 @@ board = TensorBoard(log_dir='./logs', histogram_freq=x_train.shape[0])
 
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 model.fit(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1, workers=3,
-                    use_multiprocessing=True, validation_data=(x_test, y_test), steps_per_epoch=x_train.shape[0]/nb_classes,
+                    validation_data=(x_test, y_test), steps_per_epoch=x_train.shape[0]/nb_classes,
                     callbacks=[board, lr_reducer, early_stopping_callback, model_checkpoint])
 score = model.evaluate(x_test, y_test, verbose=1)
 print('\nTest result: %.3f loss: %.3f' % (score[1]*100, score[0]))
