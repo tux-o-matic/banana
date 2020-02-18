@@ -75,7 +75,7 @@ sgd = tensorflow.keras.optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, 
 
 lr_reducer = ReduceLROnPlateau(monitor='val_accuracy', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5, verbose=1)
 early_stopping_callback = EarlyStopping(monitor='val_accuracy', patience=10)
-model_checkpoint = ModelCheckpoint(saved_model, monitor="val_acc", save_best_only=True, verbose=1)
+model_checkpoint = ModelCheckpoint(saved_model, monitor="val_accuracy", save_best_only=True, verbose=1)
 board = TensorBoard(log_dir='./logs', histogram_freq=x_train.shape[0])
 
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
