@@ -19,10 +19,15 @@ sudo cp cuda/lib64/* /usr/lib64/
 ### TensorFlow
 Rename the entry requirements.txt from
 ```ini
-tensorflow==1.8.0
+tensorflow==2.1.0
 ```
 to
 ```ini
-tensorflow-gpu==1.8.0
+tensorflow-cpu==2.1.0
 ```
+If you do not have an Nvidia GPU and which to use the lighter module which will run only on CPU.
 If your CPU doesn't support the AVX1 instruction set (Intel chip shipped before 2012), you'll need to use an older version of TensorFlow such as 1.5.0.
+
+
+## Results
+So far on CPU, training gave an accuracy of 78%.
