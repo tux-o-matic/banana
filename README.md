@@ -1,5 +1,5 @@
 ## Setup
-For training this CNN with over 200 steps and more than 10 epochs, a GPU with CUDA support is a must. CPU only won't be enough.
+For training this CNN with over 200 steps and more than 10 epochs, a GPU with CUDA support is a must. CPU based training will take several hours.
 
 At this time, all tests were done with CUDA 9.0.
 ### Nvidia drivers
@@ -26,8 +26,8 @@ to
 tensorflow-cpu==2.1.0
 ```
 If you do not have an Nvidia GPU and which to use the lighter module which will run only on CPU.
-If your CPU doesn't support the AVX1 instruction set (Intel chip shipped before 2012), you'll need to use an older version of TensorFlow such as 1.5.0.
+If your CPU doesn't support the AVX1 instruction set (Intel chip shipped before 2012), you'll need to use an older version of TensorFlow such as 1.5.0 (see keras-tf1 branch).
 
 
 ## Results
-So far on CPU, training gave an accuracy of 78%.
+So far training gave an accuracy of 78%.
