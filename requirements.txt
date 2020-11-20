@@ -11,7 +11,7 @@ protobuf==3.8.0
 PyYAML==5.1.1
 scipy==1.4.1
 six==1.12.0
-tensorboard==2.1.0
-tensorflow==2.1.0
+#tensorboard==2.4.0
+#tensorflow==2.4.0rc2
 termcolor==1.1.0
 Werkzeug==0.15.3
