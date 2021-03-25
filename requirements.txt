@@ -8,7 +8,7 @@ html5lib==0.9999999
 Markdown==2.6.11
 numpy==1.16.0
 protobuf==3.8.0
-PyYAML==5.1.1
+PyYAML==5.4
 scipy==1.4.1
 six==1.12.0
 tensorboard==2.1.0
