@@ -44,11 +44,3 @@ tensorboard-plugin-wit==1.8.0
 tensorflow==2.9.0
 tensorflow-estimator==2.9.0
 tensorflow-io-gcs-filesystem==0.26.0
-termcolor==1.1.0
-traitlets==5.0.5
-typeguard==2.11.1
-typing-extensions==3.7.4.3
-urllib3==1.26.3
-wcwidth==0.2.5
-Werkzeug==1.0.1
-wrapt==1.12.1
