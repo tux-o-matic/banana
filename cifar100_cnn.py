@@ -99,7 +99,7 @@ model.summary()
 
 lrate = 0.001
 decay_rate = lrate/nb_epoch
-sgd = tensorflow.keras.optimizers.SGD(lr=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
+sgd = tensorflow.keras.optimizers.SGD(learning_rate=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
 
 board = TensorBoard(log_dir='./logs', histogram_freq=x_train.shape[0])
 lr_reducer = ReduceLROnPlateau(monitor='val_accuracy', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5, verbose=1)
