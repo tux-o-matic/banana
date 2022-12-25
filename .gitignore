@@ -112,3 +112,6 @@ venv.bak/
 
 # TF logs
 logs/
+
+# TF trained models
+*.h5
