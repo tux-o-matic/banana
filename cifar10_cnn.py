@@ -15,6 +15,8 @@ import sys
 # Avoid warnings about CPU features
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+print(tensorflow.test.gpu_device_name())
+
 batch_size = 32
 nb_classes = 10
 nb_epoch = 100
@@ -70,8 +72,7 @@ model.add(Dense(nb_classes, activation='softmax'))
 model.summary()
 
 lrate = 0.001
-decay_rate = lrate/nb_epoch
-sgd = tensorflow.keras.optimizers.SGD(learning_rate=lrate, decay=decay_rate, momentum=0.9, nesterov=True)
+sgd = tensorflow.keras.optimizers.SGD(learning_rate=lrate, momentum=0.9, nesterov=True)
 
 lr_reducer = ReduceLROnPlateau(monitor='val_accuracy', factor=np.sqrt(0.1), cooldown=0, patience=5, min_lr=1e-5, verbose=1)
 early_stopping_callback = EarlyStopping(monitor='val_accuracy', patience=10)
@@ -79,7 +80,7 @@ model_checkpoint = ModelCheckpoint(saved_model, monitor="val_accuracy", save_bes
 board = TensorBoard(log_dir='./logs', histogram_freq=x_train.shape[0])
 
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.fit(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1, workers=3,
+model.fit(generator.flow(x_train, y_train, batch_size=batch_size), epochs=nb_epoch, verbose=1, workers=4,
                     validation_data=(x_test, y_test), steps_per_epoch=x_train.shape[0]/nb_classes,
                     callbacks=[board, lr_reducer, early_stopping_callback, model_checkpoint])
 score = model.evaluate(x_test, y_test, verbose=1)

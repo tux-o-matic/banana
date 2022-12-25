@@ -69,8 +69,7 @@ class Banana:
         if print_summary:
             model.summary()
 
-        decay_rate = learning_rate / nb_epoch
-        sgd = optimizers.SGD(lr=learning_rate, decay=decay_rate, momentum=0.9, nesterov=True)
+        sgd = optimizers.SGD(lr=learning_rate, momentum=0.9, nesterov=True)
         model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
         return model
